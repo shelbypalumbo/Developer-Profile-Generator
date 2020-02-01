@@ -15,7 +15,7 @@ const colors = {
   blue: {
     bodyBackground: "#2A35B3",
     listColor: "#D0D7ED",
-    headerColor: "black",
+    headerColor: "white",
     jumboColor: "#3C4BFA",
   },
   pink: {
@@ -57,12 +57,21 @@ function promptUser() {
 }
 
 
-//----------------------------------------------------------
+//-----------Github Data------------------------------------
 async function githubData(answers){
   const githubURL = `https://api.github.com/users/${answers.username}`;
   return axios.get(githubURL)
 };
-//----------------------------------------------------------
+
+
+//----Stars-------------------------------------------------
+
+async function starsData(answers){
+  const starsURL=`https://api.github.com/users/${answers.username}/starred`;
+
+
+  return axios.get(starsURL);
+}
 
 //------------------------------------------------------------
 function generateHTML(answers, response) {
@@ -108,6 +117,9 @@ h1, h3 { color: ${colors[answers.color].headerColor};
 .followers, .following, .stars, .repos {
   padding: 15px;
 }
+  img { border-radius: 200px;
+        border: 4px solid ${colors[answers.color].listColor};
+}
 </style>
 </head>
 <body>
@@ -115,10 +127,8 @@ h1, h3 { color: ${colors[answers.color].headerColor};
   <div class="container">
     <h1 class="display-4 text-center">Hi!</h1>
       <h1 class="text-center">My name is ${response.data.name}</h1>
-        <div class="profileImg">
-        </div>
         <div class="row">
-        <div class="col-5">
+        <div class="col-7">
     <h2><span class="badge badge-secondary">Contact Me</span></h2>
     <ul class="list-group">
       <li class="list-group-item"><p class="lead"><h4><i class="fas fa-location-arrow"></i> Location:</h4><a target="_blank" href="https://www.google.com/maps/place/${response.data.location}/data=!3m1!4b1!4m5!3m4!1s0x89e64a65bdf7146f:0x6c1c794f3958b866!8m2!3d41.5623209!4d-72.6506488">${response.data.location}</a></p></li>
@@ -127,7 +137,9 @@ h1, h3 { color: ${colors[answers.color].headerColor};
     </ul>
     </div>
     <div class="col-5">
-    ${response.data.avatar_url} 
+    <div class="profileImg">
+    <img width="300px" src="${response.data.avatar_url}">
+    </div>
     </div>
     </div>
   </div>
@@ -150,7 +162,7 @@ h1, h3 { color: ${colors[answers.color].headerColor};
   </div>
   <div class="row text-center">
     <div class="col-6">
-      <div class="stars"><h4>Github Stars:</h4>stars</div>
+      <div class="stars"><h4>Github Stars:</h4>${response.data.starred}</div>
     </div>
     <div class="col-6">
       <div class="following"><h4>Following:</h4>${response.data.following}</div>
@@ -167,8 +179,10 @@ async function init() {
   try {
     const answers = await promptUser();
     const response = await githubData(answers);
-    const html = generateHTML(answers,response);
+    const starred = await starsData(answers);
 
+    const html = generateHTML(answers,response, starred);
+   
     await writeFileAsync("index.html", html);
 
     console.log("Successfully wrote to index.html");
@@ -178,3 +192,16 @@ async function init() {
 }
 
 init();
+
+
+/*
+//PDF?????
+const convertHTMLToPDF = require("pdf-puppeteer");
+ 
+var callback = function (pdf) {
+    // do something with the PDF like send it as the response
+    res.setHeader("Content-Type", "application/pdf");
+    res.send(pdf);
+}
+*/
+
