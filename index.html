@@ -5,64 +5,88 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
   <title>Developer Profile</title>
-  <style>
+<style>
  body {
-   background-color: #CA3433;
+   background-color: #C94C44;
     }
-    .list-group{
-      border-radius: 20px;
+.bio {  background-color: #ffffff;
     }
-    .bio {  background-color: #ffffff;
-    }
-.col-6{
+.badge { background-color: #444444;
+}
+.col-6, .col-12{
   background-color:#EBCBC6;
+  border: 10px solid #FCAEA9;
 }
  .container {
-  background-color: #CA3433;
+  background-color: #C94C44;
  -webkit-print-color-adjust: exact !important;
  font-family: 'Cabin', sans-serif;
  padding: 10px;
  border-radius: 20px;
  }
-h1, h3 { color: black;
+h1, h3 { color: white;
 }
 .list-group-item {
   background-color:#EBCBC6;
 }
 .jumbotron {
-  background-color: #4B0E0A;
+  background-color: #FCAEA9;
+}
+.main { margin-top: 40px;
+        margin-bottom: 40px;
+}
+.followers, .following, .stars, .repos {
+  padding: 15px;
 }
 </style>
 </head>
 <body>
   <div class="jumbotron jumbotron-fluid">
   <div class="container">
-    <h1 class="display-4">Hi! My name is shelbypalumbo</h1>
-    <h3><span class="badge badge-secondary">Contact Me</span></h3>
+    <h1 class="display-4 text-center">Hi!</h1>
+      <h1 class="text-center">My name is Shelby Palumbo</h1>
+        <div class="profileImg">
+        </div>
+        <div class="row">
+        <div class="col-5">
+    <h2><span class="badge badge-secondary">Contact Me</span></h2>
     <ul class="list-group">
-      <li class="list-group-item"> <p class="lead"><i class="fas fa-location-arrow"></i><h4>Location:</h4></p></li>
-      <li class="list-group-item"><i class="fab fa-github"></i><h4>Github Username:</h4> shelbypalumbo</li>
-      <li class="list-group-item"><i class="fab fa-linkedin-in"></i><h4>LinkedIn:</h4> blog</li>
+      <li class="list-group-item"><p class="lead"><h4><i class="fas fa-location-arrow"></i> Location:</h4><a target="_blank" href="https://www.google.com/maps/place/Middletown, CT/data=!3m1!4b1!4m5!3m4!1s0x89e64a65bdf7146f:0x6c1c794f3958b866!8m2!3d41.5623209!4d-72.6506488">Middletown, CT</a></p></li>
+      <li class="list-group-item"><h4><i class="fab fa-github"></i> Github User:</h4> <a href="https://github.com/shelbypalumbo">shelbypalumbo</a></li>
+      <li class="list-group-item"><h4><i class="fas fa-blog"></i></h4><a href="https://www.linkedin.com/in/shelby-palumbo-a96748196/">Check out my webpage!</a></li>
     </ul>
+    </div>
+    <div class="col-5">
+    https://avatars3.githubusercontent.com/u/56893630?v=4 
+    </div>
+    </div>
   </div>
 </div>
 <div>
     <div class="main container">
-  <div class="row">
+    <div class="row">
+    <div class="col-12">
+    <h2><span class="badge badge-secondary">About Me</span></h2>
+      <p> A studious Full Stack Developer with a background in manufacturing professional audio
+equipment. </p>
+    </div>
+    </div>
+  <div class="row text-center">
       <div class="col-6">
-        <div class="repos"><h3>Public Repositories</h3>repos</div>
+        <div class="repos"><h4>Public Repositories:</h4>9</div>
       </div>
       <div class="col-6">
-        <div class="followers"><h3>Followers:</h3>followers</div>
+        <div class="followers"><h4>Followers:</h4>15</div>
     </div>
   </div>
-  <div class="row">
+  <div class="row text-center">
     <div class="col-6">
-      <div class="stars"><h3>Github Stars:</h3>stars</div>
+      <div class="stars"><h4>Github Stars:</h4>stars</div>
     </div>
     <div class="col-6">
-      <div class="following"><h3>Following:</h3>following</div>
+      <div class="following"><h4>Following:</h4>18</div>
     </div>
   </div>
   </div>

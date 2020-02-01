@@ -7,39 +7,45 @@ const writeFileAsync = util.promisify(fs.writeFile);
 //---------------------------------------------------------
 const colors = {
   green: {
-    bodyBackground: "#10A918",
+    bodyBackground: "#417F4F",
     listColor: "#E4F7E5",
     headerColor: "black",
-    jumboColor: "#065D0B",
+    jumboColor: "#CCE3D1",
   },
   blue: {
-    bodyBackground: "#0000ff",
+    bodyBackground: "#2A35B3",
     listColor: "#D0D7ED",
     headerColor: "black",
-    jumboColor: "#061B5D",
+    jumboColor: "#3C4BFA",
   },
   pink: {
     bodyBackground: "#FFC0CB",
     headerBackground: "#FF8374",
-    headerColor: "white",
-    listColor: "#F7E4ED"
+    headerColor: "black",
+    listColor: "#F7E4ED",
+    jumboColor: "#FFFFFF",
   },
   red: {
-    bodyBackground: "#CA3433",
+    bodyBackground: "#C94C44",
     headerColor: "black",
     listColor: "#EBCBC6",
-    jumboColor: "#4B0E0A",
+    jumboColor: "#FCAEA9",
+  },
+  purple: {
+    bodyBackground: "#6F45D3",
+    headerColor: "black",
+    listColor: "#D7CBF5",
+    jumboColor: "#A68DE1",
   }
 };
 
 
 //-------------------------------------------------------
-
 function promptUser() {
   return inquirer.prompt([
     {
       type: "input",
-      name: "name",
+      name: "username",
       message: "What is your github username?"
     },
     {
@@ -51,9 +57,15 @@ function promptUser() {
 }
 
 
-//------------------------------------------------------------
+//----------------------------------------------------------
+async function githubData(answers){
+  const githubURL = `https://api.github.com/users/${answers.username}`;
+  return axios.get(githubURL)
+};
+//----------------------------------------------------------
 
-function generateHTML(answers) {
+//------------------------------------------------------------
+function generateHTML(answers, response) {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -61,6 +73,7 @@ function generateHTML(answers) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
   <title>Developer Profile</title>
 <style>
  body {
@@ -68,8 +81,11 @@ function generateHTML(answers) {
     }
 .bio {  background-color: #ffffff;
     }
-.col-6{
+.badge { background-color: #444444;
+}
+.col-6, .col-12{
   background-color:${colors[answers.color].listColor};
+  border: 10px solid ${colors[answers.color].jumboColor};
 }
  .container {
   background-color: ${colors[answers.color].bodyBackground};
@@ -86,38 +102,58 @@ h1, h3 { color: ${colors[answers.color].headerColor};
 .jumbotron {
   background-color: ${colors[answers.color].jumboColor};
 }
+.main { margin-top: 40px;
+        margin-bottom: 40px;
+}
+.followers, .following, .stars, .repos {
+  padding: 15px;
+}
 </style>
 </head>
 <body>
   <div class="jumbotron jumbotron-fluid">
   <div class="container">
-    <h1 class="display-4">Hi! My name is ${answers.name}</h1>
+    <h1 class="display-4 text-center">Hi!</h1>
+      <h1 class="text-center">My name is ${response.data.name}</h1>
         <div class="profileImg">
         </div>
-    <h3><span class="badge badge-secondary">Contact Me</span></h3>
+        <div class="row">
+        <div class="col-5">
+    <h2><span class="badge badge-secondary">Contact Me</span></h2>
     <ul class="list-group">
-      <li class="list-group-item"> <p class="lead"><i class="fas fa-location-arrow"></i><h4>Location:</h4></p></li>
-      <li class="list-group-item"><i class="fab fa-github"></i><h4>Github Username:</h4> ${answers.name}</li>
-      <li class="list-group-item"><i class="fab fa-linkedin-in"></i><h4>LinkedIn:</h4> blog</li>
+      <li class="list-group-item"><p class="lead"><h4><i class="fas fa-location-arrow"></i> Location:</h4><a target="_blank" href="https://www.google.com/maps/place/${response.data.location}/data=!3m1!4b1!4m5!3m4!1s0x89e64a65bdf7146f:0x6c1c794f3958b866!8m2!3d41.5623209!4d-72.6506488">${response.data.location}</a></p></li>
+      <li class="list-group-item"><h4><i class="fab fa-github"></i> Github User:</h4> <a href="https://github.com/${response.data.login}">${response.data.login}</a></li>
+      <li class="list-group-item"><h4><i class="fas fa-blog"></i></h4><a href="${response.data.blog}">Check out my webpage!</a></li>
     </ul>
+    </div>
+    <div class="col-5">
+    ${response.data.avatar_url} 
+    </div>
+    </div>
   </div>
 </div>
 <div>
     <div class="main container">
-  <div class="row">
+    <div class="row">
+    <div class="col-12">
+    <h2><span class="badge badge-secondary">About Me</span></h2>
+      <p> ${response.data.bio}</p>
+    </div>
+    </div>
+  <div class="row text-center">
       <div class="col-6">
-        <div class="repos"><h3>Public Repositories</h3>repos</div>
+        <div class="repos"><h4>Public Repositories:</h4>${response.data.public_repos}</div>
       </div>
       <div class="col-6">
-        <div class="followers"><h3>Followers:</h3>followers</div>
+        <div class="followers"><h4>Followers:</h4>${response.data.followers}</div>
     </div>
   </div>
-  <div class="row">
+  <div class="row text-center">
     <div class="col-6">
-      <div class="stars"><h3>Github Stars:</h3>stars</div>
+      <div class="stars"><h4>Github Stars:</h4>stars</div>
     </div>
     <div class="col-6">
-      <div class="following"><h3>Following:</h3>following</div>
+      <div class="following"><h4>Following:</h4>${response.data.following}</div>
     </div>
   </div>
   </div>
@@ -126,10 +162,12 @@ h1, h3 { color: ${colors[answers.color].headerColor};
 </html>`;
 }
 
+//-----------------------------------------------------------------------------
 async function init() {
   try {
     const answers = await promptUser();
-    const html = generateHTML(answers, colors);
+    const response = await githubData(answers);
+    const html = generateHTML(answers,response);
 
     await writeFileAsync("index.html", html);
 
@@ -140,124 +178,3 @@ async function init() {
 }
 
 init();
-
-
-
-
-
-
-
-
-///----------------------------github data------------------------------------------------------------
-/*
-.then(function ({ username }) { //retreives github repos
-
-  //github repos
-     const queryUrlRepos = `https://api.github.com/users/${username}/repos?per_page=100`;
-     axios
-    .get(queryUrlRepos).then(function (response) {
-      const userRepos = response.data.map(function (repo) {
-        return repo.repos
-      });
-      const repoStr = userRepos.join("\n");
-      fs.writeFile("repos.txt", repoStr, function (err) { //saves the string container the repo names to repos.txt
-        if (err) {
-          throw (err);
-        }
-        console.log(`${username} has ${repoStr.length} repos on github.`);
-      })
-    });
- //followers
-       const queryUrlFollowers = `https://api.github.com/users/${username}/followers`;
-     axios
-       .get(queryUrlFollowers).then(function (response) {
-
-         const userFollowers = response.data.map(function(followers){
-           return followers.followers
-         });
-         const followerStr = userFollowers.join("\n");
-         fs.writeFile("repos.txt", followerStr, function(err){
-           if(err){
-             throw(err);
-           }
-           console.log( `${username} has ${followerStr.length} followers on github.`);
-         })
-       });
- //following
-       const queryUrlFollowing = `https://api.github.com/users/${username}/following`;
-       axios
-         .get(queryUrlFollowing).then(function (response) {
-           const userFollowing = response.data.map(function(following){
-             return following.following
-           });
-           const followingStr = userFollowing.join("\n");
-           fs.writeFile("repos.txt", followingStr, function(err){
-             if(err){
-               throw(err);
-             }
-             console.log( `${username} is following ${followingStr.length} users.`);
-           })
-         });
- //bio
- const queryUrlBio = `https://api.github.com/users/${username}/bio`;
- axios
-   .get(queryUrlBio).then(function (response) {
-     const userBio = response.data.map(function(bio){
-       return bio.bio
-     });
-     const bioStr = userBio.join("\n");
-     fs.writeFile("repos.txt", bioStr, function(err){
-       if(err){
-         throw(err);
-       }
-       console.log( `${bioStr}`);
-     })
-   });
-
-//location----------------------------------------------------------------------
- const queryUrlLocation = `https://api.github.com/users/${username}/location`;
- axios
-  .get(queryUrlLocation).then(function (response) {
-    const userLocation = response.data.map(function(location){
-      return location.location
-    });
-  const locationStr = userLocation.join("\n");
-    fs.writeFile("repos.txt", locationStr, function(err){
-      if(err){
-        throw(err);
-      }
-      console.log( `From : ${locationStr}`);
-    })
-  });
- //name---------------------------------------------------------------------------
- const queryUrlName = `https://api.github.com/users/${username}/name`;
- axios
- .get(queryUrlName).then(function (response) {
-  const userName = response.data.map(function(name){
-    return name.name
-  });
-  const nameStr = userName.join("\n");
-  fs.writeFile("repos.txt", nameStr, function(err){
-    if(err){
-      throw(err);
-    }
-    console.log( `From : ${nameStr}`);
-  })
- });
- //blog--------------------------------------------------------------------------
- const queryUrlBlog = `https://api.github.com/users/${username}/blog`;
- axios
- .get(queryUrlBlog).then(function (response) {
-  const userBlog = response.data.map(function(blog){
-    return blog.blog
-  });
-  const blogStr = userBlog.join("\n");
-  fs.writeFile("repos.txt", blogStr, function(err){
-    if(err){
-      throw(err);
-    }
-    console.log( `LinkedIn : ${blogStr}`);
-  })
- });
-   });
-   */
