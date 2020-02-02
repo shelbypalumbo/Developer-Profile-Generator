@@ -1,6 +1,8 @@
 # Developer-Profile-Generator
 Dynamically generates a PDF developer profile page from the data given by a GitHub username.
 
+https://media.giphy.com/media/kyjIZtsQvonTzAlE5Y/giphy.gif
+
 ## User Story
 As a product manager, I want a developer profile generator, so that I can easily gather and provide a resume on a specific developer.
 
@@ -9,7 +11,7 @@ Upon the start of the application, a prompted will appear for users to enter a g
 
 ![Prompt Message](prompt.png)
 
-#### Generate Profile Example
+### Generate Profile Example
 ![Dev Profile](profileImg.png)
 
 ## Programming Languages Used
