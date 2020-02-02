@@ -3,7 +3,8 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const util = require("util");
 const writeFileAsync = util.promisify(fs.writeFile);
-
+const convertHTMLToPDF = require("pdf-puppeteer");
+ 
 
 //-------------Color Input Styling Options------------------
 const colors = {
@@ -72,7 +73,12 @@ async function starsData(answers){
   return stars.data.length;
 
 }
-
+//-------------PDF--------------------------------------------
+var callback = function (html) {
+    // do something with the PDF like send it as the response
+    writeFileAsync("profile.pdf", html);
+}
+ 
 
 //-------------Generate HTML File-----------------------------
 function generateHTML(answers, response, starred) {
@@ -133,8 +139,8 @@ h1, h3 { color: ${colors[answers.color].headerColor};
     <h2><span class="badge badge-secondary">Contact Me</span></h2>
     <ul class="list-group">
       <li class="list-group-item"><p class="lead"><h4><i class="fas fa-location-arrow"></i> Location:</h4><a target="_blank" href="https://www.google.com/maps/place/${response.data.location}/data=!3m1!4b1!4m5!3m4!1s0x89e64a65bdf7146f:0x6c1c794f3958b866!8m2!3d41.5623209!4d-72.6506488">${response.data.location}</a></p></li>
-      <li class="list-group-item"><h4><i class="fab fa-github"></i> Github User:</h4> <a href="https://github.com/${response.data.login}">${response.data.login}</a></li>
-      <li class="list-group-item"><h4><i class="fas fa-blog"></i></h4><a href="${response.data.blog}">Check out my webpage!</a></li>
+      <li class="list-group-item"><h4><i class="fab fa-github"></i> Github User:</h4> <a target="_blank" href="https://github.com/${response.data.login}">${response.data.login}</a></li>
+      <li class="list-group-item"><h4><i class="fas fa-blog"></i></h4><a target="_blank" href="${response.data.blog}">Check out my webpage!</a></li>
     </ul>
     </div>
     <div class="col-5">
@@ -182,12 +188,13 @@ async function init() {
     const answers = await promptUser();
     const response = await githubData(answers);
     const starred = await starsData(answers);
-    
     const html = generateHTML(answers,response, starred);
    
     await writeFileAsync("index.html", html);
 
-    console.log("Successfully wrote to index.html");
+    convertHTMLToPDF(html, callback);
+    console.log("Successfully created a pdf file from index.html!")
+    console.log("Successfully wrote to index.html!");
   } catch (err) {
     console.log(err);
   }
