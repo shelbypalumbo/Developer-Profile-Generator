@@ -10,7 +10,7 @@ The user will be prompted upon initial use for a github username and their favor
 ![Prompt Message](prompt.png)
 
 #### Generate Profile Example
-![Dev Profile](userProfile.png)
+![Dev Profile](userImg.png)
 
 ## Programming Languages Used
 * HTML
