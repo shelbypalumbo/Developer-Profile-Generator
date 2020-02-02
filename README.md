@@ -1,6 +1,8 @@
 # Developer-Profile-Generator
 Dynamically generates a PDF developer profile page from the data given by a GitHub username.
+https://shelbypalumbo.github.io/Developer-Profile-Generator/
 
+#### GIF 
 https://media.giphy.com/media/kyjIZtsQvonTzAlE5Y/giphy.gif
 
 ## User Story
