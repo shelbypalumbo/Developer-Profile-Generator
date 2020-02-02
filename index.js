@@ -4,12 +4,13 @@ const fs = require("fs");
 const util = require("util");
 const writeFileAsync = util.promisify(fs.writeFile);
 
-//---------------------------------------------------------
+
+//-------------Color Input Styling Options------------------
 const colors = {
   green: {
     bodyBackground: "#417F4F",
     listColor: "#E4F7E5",
-    headerColor: "black",
+    headerColor: "white",
     jumboColor: "#CCE3D1",
   },
   blue: {
@@ -40,7 +41,7 @@ const colors = {
 };
 
 
-//-------------------------------------------------------
+//----------User Input Prompt---------------------------------
 function promptUser() {
   return inquirer.prompt([
     {
@@ -64,17 +65,17 @@ async function githubData(answers){
 };
 
 
-//----Stars-------------------------------------------------
-
+//-------------Stars-----------------------------------------
 async function starsData(answers){
-  const starsURL=`https://api.github.com/users/${answers.username}/starred`;
+  const starsURL =`https://api.github.com/users/${answers.username}/starred`;
+  let stars = await axios.get(starsURL);
+  return stars.data.length;
 
-
-  return axios.get(starsURL);
 }
 
-//------------------------------------------------------------
-function generateHTML(answers, response) {
+
+//-------------Generate HTML File-----------------------------
+function generateHTML(answers, response, starred) {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -126,7 +127,7 @@ h1, h3 { color: ${colors[answers.color].headerColor};
   <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <h1 class="display-4 text-center">Hi!</h1>
-      <h1 class="text-center">My name is ${response.data.name}</h1>
+      <h1 class="text-center">My name is <b>${response.data.name}</b></h1>
         <div class="row">
         <div class="col-7">
     <h2><span class="badge badge-secondary">Contact Me</span></h2>
@@ -149,7 +150,7 @@ h1, h3 { color: ${colors[answers.color].headerColor};
     <div class="row">
     <div class="col-12">
     <h2><span class="badge badge-secondary">About Me</span></h2>
-      <p> ${response.data.bio}</p>
+      <p class="text-center"> ${response.data.bio}</p>
     </div>
     </div>
   <div class="row text-center">
@@ -162,7 +163,7 @@ h1, h3 { color: ${colors[answers.color].headerColor};
   </div>
   <div class="row text-center">
     <div class="col-6">
-      <div class="stars"><h4>Github Stars:</h4>${response.data.starred}</div>
+      <div class="stars"><h4>Github Stars:</h4>${starred}</div>
     </div>
     <div class="col-6">
       <div class="following"><h4>Following:</h4>${response.data.following}</div>
@@ -174,13 +175,14 @@ h1, h3 { color: ${colors[answers.color].headerColor};
 </html>`;
 }
 
+
 //-----------------------------------------------------------------------------
 async function init() {
   try {
     const answers = await promptUser();
     const response = await githubData(answers);
     const starred = await starsData(answers);
-
+    
     const html = generateHTML(answers,response, starred);
    
     await writeFileAsync("index.html", html);
@@ -190,18 +192,5 @@ async function init() {
     console.log(err);
   }
 }
-
 init();
-
-
-/*
-//PDF?????
-const convertHTMLToPDF = require("pdf-puppeteer");
- 
-var callback = function (pdf) {
-    // do something with the PDF like send it as the response
-    res.setHeader("Content-Type", "application/pdf");
-    res.send(pdf);
-}
-*/
 
