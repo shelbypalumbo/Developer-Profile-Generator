@@ -15,15 +15,16 @@ Upon the start of the application, a prompted will appear for users to enter a g
 
 ![Prompt Message](prompt.png)
 
-### Generate Profile Example
+### Generated Profile Example
 
 ![Dev Profile](profileImg.png)
 
-## Programming Languages Used
+## Technologies Used
 
 - HTML
 - CSS
 - Javascript
+- Puppeteer
 
 ### Additional Styling Framework
 
