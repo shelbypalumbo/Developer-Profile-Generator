@@ -11,7 +11,7 @@ As a product manager, I want a developer profile generator, so that I can easily
 
 ## Usage
 
-Upon the start of the application, a prompted will appear for users to enter a github username and their favorite color. Once both prompts are answered, the html and pdf file is generated, and a confirmation message will appear!
+Upon start of the application, a prompt will appear for users to enter a github username and their favorite color. Once both prompts are answered, the html and pdf file will generate, and a confirmation message will appear!
 
 ![Prompt Message](prompt.png)
 
@@ -29,4 +29,4 @@ Upon the start of the application, a prompted will appear for users to enter a g
 ### Additional Styling Framework
 
 - Bootstrap | https://getbootstrap.com/
-- Fontsawesome icons | https://fontawesome.com/icons?d=gallery&m=free
+- Fontawesome icons | https://fontawesome.com/icons?d=gallery&m=free
